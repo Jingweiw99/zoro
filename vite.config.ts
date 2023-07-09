@@ -5,9 +5,10 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import path from 'path'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     vue(),
     AutoImport({
@@ -22,6 +23,11 @@ export default defineConfig({
       // Specify symbolId format
       symbolId: 'icon-[dir]-[name]',
     }),
+    viteMockServe({
+      // default vite mock 这里按照github上写报错，降级到2.9.6版本
+      mockPath: 'mock',
+      localEnabled: command === 'serve',
+    }),
   ],
   resolve: {
     alias: {
@@ -29,4 +35,12 @@ export default defineConfig({
       cpns: path.resolve('./src/components'),
     },
   },
-})
+  css: {
+    preprocessorOptions: {
+      scss: {
+        javascriptEnabled: true,
+        additionalData: '@import "./src/styles/variable.scss";',
+      },
+    },
+  },
+}))
