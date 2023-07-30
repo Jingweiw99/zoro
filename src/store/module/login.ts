@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 import { reqLogin } from '@/api/user'
 import { GET_TOKEN, SET_TOKEN } from '@/utils/token'
+import { constantRoutes } from '@/router/routes'
 
 const useLoginStore = defineStore('login', {
   state: () => {
     return {
       token: GET_TOKEN() || '',
+      menuRoutes: constantRoutes,
     }
   },
   actions: {
